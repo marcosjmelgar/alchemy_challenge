@@ -1,5 +1,5 @@
-# AlkemyChallenge-Python
- Challenge Data Analytics - Python
+# AlkemyChallenge
+ Challenge Data Analytics
 
 ## 1. Create Virtual ENV
 
@@ -35,7 +35,7 @@ pip3 install -r requirements.txt
 - Connect to postgres
 
 ```bash
-sudo -i -u postgres
+psql -u postgres
 ```
 
 - Access to PostgreSQL
