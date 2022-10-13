@@ -1,11 +1,11 @@
 # db.py
 # provides a connect() function that returns a SQLAlchemy connection to the database passed to config(); sample uses config() defaults. 
 
+import logging
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 import pandas as pd
 from config import config
-import logging
 
 from download_data import download_data
 from create_df import create_df_cultural, create_df_registros, create_df_cines
@@ -41,9 +41,9 @@ def create_database():
         engine = create_engine(conn_string)
         
         # create dataframes
-        df_museos = download_data('museos', 'https://datos.cultura.gob.ar/dataset/37305de4-3cce-4d4b-9d9a-fec3ca61d09f/resource/4207def0-2ff7-41d5-9095-d42ae8207a5d/download/museo.csv')
         df_cines = download_data('cines', 'https://datos.cultura.gob.ar/dataset/37305de4-3cce-4d4b-9d9a-fec3ca61d09f/resource/392ce1a8-ef11-4776-b280-6f1c7fae16ae/download/cine.csv')
         df_bibliotecas = download_data('bibliotecas', 'https://datos.cultura.gob.ar/dataset/37305de4-3cce-4d4b-9d9a-fec3ca61d09f/resource/01c6c048-dbeb-44e0-8efa-6944f73715d7/download/biblioteca_popular.csv')
+        df_museos = download_data('museos', 'https://datos.cultura.gob.ar/dataset/37305de4-3cce-4d4b-9d9a-fec3ca61d09f/resource/4207def0-2ff7-41d5-9095-d42ae8207a5d/download/museo.csv')
         
         # create df_cultural --> to_sql
         df_cultural = create_df_cultural(df_museos, df_cines, df_bibliotecas)
@@ -68,17 +68,8 @@ def create_database():
 
         connection = engine.connect()
 
-        ## read sql 
-        #cursor = connection
-        #sql="""select * from cultural"""
-        #query_results = cursor.execute(sql).fetchall()
-        #df = pd.DataFrame(query_results)
-        #print(df[:10])
-
         logger.info('Connected to the database!')
 
-        #connection.close()
-        #logger.info('Closed database.')
         
         return connection
     except:

@@ -15,15 +15,7 @@ logger.addHandler(file_handler)
 
 # create df_cultural
 def create_df_cultural(df_museos, df_cines, df_bibliotecas):
-    
-    # rename df_museos columns
-    df_museos = df_museos.drop(['Observaciones', 'subcategoria', 'piso', 
-        'cod_area', 'Latitud', 'Longitud', 'TipoLatitudLongitud',
-        'Info_adicional', 'jurisdiccion', 'año_inauguracion',
-        'IDSInCA'], axis=1)
 
-    df_museos.columns = ['Cod_Loc', 'Id_Provincia', 'Id_Departamento', 'Categoria', 
-        'Provincia', 'Localidad', 'Nombre', 'Domicilio', 'Cod_Postal', 'Telefono', 'Mail', 'Web', 'Fuente']
 
     # rename df_cines columns
     df_cines = df_cines.drop(['Observaciones', 'Piso', "Departamento",
@@ -44,6 +36,15 @@ def create_df_cultural(df_museos, df_cines, df_bibliotecas):
     df_bibliotecas.columns = ['Cod_Loc', 'Id_Provincia', 'Id_Departamento', 'Categoria', 
         'Provincia', 'Localidad', 'Nombre', 'Domicilio', 'Cod_Postal', 'Telefono', 'Mail', 'Web', 'Fuente']
 
+    # rename df_museos columns
+    df_museos = df_museos.drop(['Observaciones', 'subcategoria', 'piso', 
+        'cod_area', 'Latitud', 'Longitud', 'TipoLatitudLongitud',
+        'Info_adicional', 'jurisdiccion', 'año_inauguracion',
+        'IDSInCA'], axis=1)
+
+    df_museos.columns = ['Cod_Loc', 'Id_Provincia', 'Id_Departamento', 'Categoria', 
+        'Provincia', 'Localidad', 'Nombre', 'Domicilio', 'Cod_Postal', 'Telefono', 'Mail', 'Web', 'Fuente']
+    
     fecha = dt.datetime.today().strftime("%m/%d/%Y")
     
     df_cultural = pd.DataFrame()
@@ -51,7 +52,7 @@ def create_df_cultural(df_museos, df_cines, df_bibliotecas):
     df_cultural.insert(0, "Fecha", fecha)
     df_cultural = df_cultural.set_index('Fecha')
 
-    #print(df_cultural.isnull().sum())
+
     df_cultural = df_cultural.fillna('NaN')
 
     logger.info(f'DataFrame Cultural was created!: \n\n{df_cultural}\n')
@@ -61,13 +62,13 @@ def create_df_cultural(df_museos, df_cines, df_bibliotecas):
 
 def create_df_registros(df_cultural):
 
-    # Categoria
-    df_categoria = df_cultural.groupby(['Categoria']).size().reset_index(name='Total')      
-    logger.info(f"Cantidad de registros totales por 'Categoria': \n\n{df_categoria}\n")
-    
     # Fuentes
     df_fuentes = df_cultural.groupby(['Fuente']).size().reset_index(name='Total')
     logger.info(f"Cantidad de registros totales por 'Fuente': \n\n{df_fuentes}\n")
+
+    # Categoria
+    df_categoria = df_cultural.groupby(['Categoria']).size().reset_index(name='Total')      
+    logger.info(f"Cantidad de registros totales por 'Categoria': \n\n{df_categoria}\n")
     
     # Provincia y Categorias
     df_prov_categ = df_cultural.groupby(['Provincia', 'Categoria']).size().reset_index(name='Total')
@@ -96,7 +97,7 @@ def create_df_cines(df_cines):
     fecha = dt.datetime.today().strftime("%m/%d/%Y")
     
     df_cines_prov.insert(3, "Fecha", fecha)
-    #df_cines_prov = df_cines_prov.set_index('Fecha')
+
     df_cines_prov = df_cines_prov.fillna('NaN')
     
     logger.info(f"Informacion de 'Cines': \n\n{df_cines_prov}\n")
